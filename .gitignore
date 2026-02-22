@@ -1,0 +1,49 @@
+# Build directories
+/build/
+/build-*/
+/cmake-build-*/
+/out/
+
+# CMake generated files (including nested test/build trees)
+**/CMakeFiles/
+**/CMakeCache.txt
+**/CTestTestfile.cmake
+**/cmake_install.cmake
+**/install_manifest.txt
+**/compile_commands.json
+**/.cmake/
+**/Testing/
+
+# IDE and local tooling state
+.vscode/
+.idea/
+.run/
+.cache/
+
+# OS files
+.DS_Store
+
+# Build artifacts
+*.o
+*.obj
+*.a
+*.so
+*.dylib
+*.exe
+*.dSYM/
+
+# Coverage/profiling output
+*.gcno
+*.gcda
+*.profraw
+*.profdata
+
+# Editor/backup/temp files (like main.cpp.A1B2C3...)
+*.[ch]pp.[A-F0-9]*
+*.[ch]xx.[A-F0-9]*
+*.tmp
+*.bak
+*~
+
+# Diagram files
+*.drawio
