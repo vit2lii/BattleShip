@@ -1,6 +1,7 @@
 set(sources
         src/core/boat.cpp
         src/core/board.cpp
+        src/gameplay.cpp
         src/player/player.cpp
         src/server/game_store.cpp
         src/server/http_router.cpp
@@ -19,6 +20,7 @@ set(headers
         include/project/core/placement.hpp
         include/project/core/structure.hpp
         include/project/core/boardPrinter.hpp
+        include/project/gameplay.hpp
         include/project/player/player.hpp
         include/project/exceptions/exceptions.hpp
         include/project/core/cell.hpp
@@ -30,5 +32,6 @@ set(headers
 
 set(test_sources
         src/board_test.cpp
+        src/gameplay_test.cpp
         server/test_server.cpp
 )

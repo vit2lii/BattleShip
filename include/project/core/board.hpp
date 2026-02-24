@@ -41,8 +41,8 @@ namespace battleship
   class Board
   {
   public:
-  Board();
-  ~Board() = default;
+    Board();
+    ~Board() = default;
 
     // Non-copyable, non-movable
     Board(const Board&) = delete;
