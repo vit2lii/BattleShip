@@ -166,24 +166,70 @@ include(cmake/Doxygen.cmake)
 # Model project dependencies
 #
 
-# Identify and link with the specific "packages" the project uses
-#find_package(package_name package_version REQUIRED package_type [other_options])
-#target_link_libraries(
-#  ${PROJECT_NAME}
-#  PUBLIC
-#    dependency1 ...
-#  PRIVATE
-#    dependency2 ...
-#    ${PROJECT_NAME}_PROJECT_OPTIONS
-#    ${PROJECT_NAME}_PROJECT_WARNINGS
-#)
-#if(${PROJECT_NAME}_BUILD_EXECUTABLE AND ${PROJECT_NAME}_ENABLE_UNIT_TESTING)
-#  target_link_libraries(
-#    ${PROJECT_NAME}_LIB
-#    PUBLIC
-#      dependency1 ...
-#  )
-#endif()
+if(NOT ${PROJECT_NAME}_BUILD_HEADERS_ONLY)
+  find_package(Boost REQUIRED CONFIG)
+  find_package(Threads REQUIRED)
+
+  if(TARGET Boost::headers)
+    set(BATTLESHIP_BOOST_TARGET Boost::headers)
+  elseif(TARGET Boost::boost)
+    set(BATTLESHIP_BOOST_TARGET Boost::boost)
+  endif()
+
+  target_compile_definitions(
+    ${PROJECT_NAME}
+    PRIVATE
+      BOOST_ERROR_CODE_HEADER_ONLY
+  )
+
+  if(BATTLESHIP_BOOST_TARGET)
+    target_link_libraries(
+      ${PROJECT_NAME}
+      PRIVATE
+        ${BATTLESHIP_BOOST_TARGET}
+        Threads::Threads
+    )
+  else()
+    target_include_directories(
+      ${PROJECT_NAME}
+      PRIVATE
+        ${Boost_INCLUDE_DIRS}
+    )
+    target_link_libraries(
+      ${PROJECT_NAME}
+      PRIVATE
+        Threads::Threads
+    )
+  endif()
+
+  if(${PROJECT_NAME}_BUILD_EXECUTABLE AND ${PROJECT_NAME}_ENABLE_UNIT_TESTING)
+    target_compile_definitions(
+      ${PROJECT_NAME}_LIB
+      PRIVATE
+        BOOST_ERROR_CODE_HEADER_ONLY
+    )
+
+    if(BATTLESHIP_BOOST_TARGET)
+      target_link_libraries(
+        ${PROJECT_NAME}_LIB
+        PRIVATE
+          ${BATTLESHIP_BOOST_TARGET}
+          Threads::Threads
+      )
+    else()
+      target_include_directories(
+        ${PROJECT_NAME}_LIB
+        PRIVATE
+          ${Boost_INCLUDE_DIRS}
+      )
+      target_link_libraries(
+        ${PROJECT_NAME}_LIB
+        PRIVATE
+          Threads::Threads
+      )
+    endif()
+  endif()
+endif()
 
 # For Windows, it is necessary to link with the MultiThreaded library.
 # Depending on how the rest of the project's dependencies are linked, it might be necessary
@@ -362,12 +408,13 @@ endif()
 
 message(STATUS "Finished building requirements for installing the package.\n")
 
+include(CTest)
+
 #
 # Unit testing setup
 #
 
-if(${PROJECT_NAME}_ENABLE_UNIT_TESTING)
-  enable_testing()
+if(BUILD_TESTING AND ${PROJECT_NAME}_ENABLE_UNIT_TESTING)
   message(STATUS "Build unit tests for the project. Tests should always be found in the test folder\n")
   add_subdirectory(test)
 endif()

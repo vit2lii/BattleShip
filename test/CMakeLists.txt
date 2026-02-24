@@ -73,12 +73,21 @@ foreach(file ${test_sources})
   # Add the unit tests
   #
 
-  add_test(
-    NAME
-      ${test_name}
-    COMMAND
-      ${test_name}_Tests
-  )
+  if(${CMAKE_PROJECT_NAME}_USE_GTEST)
+    add_test(
+      NAME
+        ${test_name}
+      COMMAND
+        ${test_name}_Tests
+    )
+  else()
+    add_test(
+      NAME
+        ${test_name}
+      COMMAND
+        ${test_name}_Tests
+    )
+  endif()
 endforeach()
 
 verbose_message("Finished adding unit tests for ${CMAKE_PROJECT_NAME}.")

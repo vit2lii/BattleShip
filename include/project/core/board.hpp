@@ -56,6 +56,7 @@ namespace battleship
 
     void placeStructure(const Structure& structure, const Placement& placement);
     void handle_shot(const Coordinate& coord);
+    [[nodiscard]] bool allBoatsDestroyed() const;
 
     void reset();
 

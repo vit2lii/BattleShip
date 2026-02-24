@@ -178,6 +178,19 @@ namespace battleship
     }
   }
 
+  bool Board::allBoatsDestroyed() const
+  {
+    for (const auto& entry : m_structuresStartPositions)
+    {
+      const auto& structure = entry.first;
+      if (structure->type() == StructureType::BOAT && !structure->isDestroyed())
+      {
+        return false;
+      }
+    }
+    return true;
+  }
+
   void Board::reset()
   {
     m_cells = make_empty_cels();
